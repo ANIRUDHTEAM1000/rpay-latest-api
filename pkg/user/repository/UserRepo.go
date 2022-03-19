@@ -109,8 +109,8 @@ func GetUserAccountByLogId(user_id string) string {
 	return res
 }
 
-func GetUserAccountPk(user_id string) int {
-	var res int
-	db.Raw("select ACCOUNT_ID from rm_account WHERE ACCOUNT_ID = (select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = (SELECT user_info_id FROM rm_user_info WHERE USER_LOGIN_ID=?));", user_id).Scan(&res)
+func GetUserAccountPk(user_id string) int64 {
+	var res int64
+	db.Raw("select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = (SELECT user_info_id FROM rm_user_info WHERE USER_LOGIN_ID=?);", user_id).Scan(&res)
 	return res
 }

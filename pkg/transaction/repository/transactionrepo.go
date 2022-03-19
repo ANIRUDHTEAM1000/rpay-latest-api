@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	dao "rpay/pkg/transaction/dao"
 	config "rpay/resources"
 )
 
@@ -19,30 +20,54 @@ func GenUUID() string {
 	return id.String()
 }
 
-func StartTransaction(sender int, receiver int, amount int64) string {
+func StartTransaction(sender int64, receiver int64, amount int64) dao.Transaction_output {
+	var result = dao.Transaction_output{}
 	uuid := GenUUID()
 	fmt.Println("senders a_id", sender, "receiver a_id", receiver, uuid)
 	var tid int
-
-	db.Debug().Exec("INSERT INTO RT_TRANSACTION(TRANSACTION_UNIQUE_ID,TRANSACTION_TYPE_CODE,TRANSACTION_AMOUNT,CREATED_BY,UPDATED_BY)"+
-		" values(?,'b',?,'Admin','Admin');", uuid, amount)
-	db.Debug().Raw("select TRANSACTION_ID from RT_TRANSACTION where TRANSACTION_UNIQUE_ID = ?", uuid).Scan(&tid)
-	fmt.Println(tid)
-	db.Debug().Exec("INSERT INTO RT_TRANSACTION_LEDGER(TRANSACTION_ID,ACCOUNT_ID,LEDGER_TYPE_CODE,LEDGER_TRANSACTION_AMOUNT,CREATED_BY"+
-		",UPDATED_BY) values (?,?,'D',?,'Admin','Admin');", tid, sender, -amount)
-	db.Debug().Exec("INSERT INTO RT_TRANSACTION_LEDGER(TRANSACTION_ID,ACCOUNT_ID,LEDGER_TYPE_CODE,LEDGER_TRANSACTION_AMOUNT,CREATED_BY"+
-		",UPDATED_BY) values (?,?,'C',?,'Admin','Admin');", tid, receiver, +amount)
-	db.Debug().Exec("UPDATE rm_account set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE-? where ACCOUNT_ID=? ;", amount, sender)
-	db.Debug().Exec("UPDATE rm_account set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE+? where ACCOUNT_ID=? ;", amount, receiver)
-
-	return "success"
+	txn := db.Transaction(func(tx *gorm.DB) error {
+		// do some database operations in the transaction (use 'tx' from this point, not 'db')
+		if err := db.Debug().Exec("INSERT INTO RT_TRANSACTION(TRANSACTION_UNIQUE_ID,TRANSACTION_TYPE_CODE,TRANSACTION_AMOUNT,CREATED_BY,UPDATED_BY)"+
+			" values(?,'b',?,'Admin','Admin');", uuid, amount).Error; err != nil {
+			fmt.Println(err)
+			return err
+		}
+		if err := db.Debug().Raw("select TRANSACTION_ID from RT_TRANSACTION where TRANSACTION_UNIQUE_ID = ?", uuid).Scan(&tid).Error; err != nil {
+			fmt.Println(err)
+			return err
+		}
+		fmt.Println(tid)
+		if err := db.Debug().Exec("INSERT INTO RT_TRANSACTION_LEDGER(TRANSACTION_ID,ACCOUNT_ID,LEDGER_TYPE_CODE,LEDGER_TRANSACTION_AMOUNT,CREATED_BY"+
+			",UPDATED_BY) values (?,?,'D',?,'Admin','Admin');", tid, sender, -amount).Error; err != nil {
+			fmt.Println(err)
+			return err
+		}
+		if err := db.Debug().Exec("INSERT INTO RT_TRANSACTION_LEDGER(TRANSACTION_ID,ACCOUNT_ID,LEDGER_TYPE_CODE,LEDGER_TRANSACTION_AMOUNT,CREATED_BY"+
+			",UPDATED_BY) values (?,?,'C',?,'Admin','Admin');", tid, receiver, +amount).Error; err != nil {
+			fmt.Println(err)
+			return err
+		}
+		if err := db.Debug().Exec("UPDATE rm_account set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE-? where ACCOUNT_ID=? ;", amount, sender).Error; err != nil {
+			fmt.Println(err)
+			return err
+		}
+		if err := db.Debug().Exec("UPDATE rm_account set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE+? where ACCOUNT_ID=? ;", amount, receiver).Error; err != nil {
+			fmt.Println(err)
+			return err
+		}
+		if err := db.Debug().Raw("select current_timestamp();").Scan(&result.Time).Error; err != nil {
+			fmt.Println(err, result.Time)
+			return err
+		}
+		// return nil will commit the whole transaction
+		return nil
+	})
+	if txn == nil {
+		result.Status = 1
+		result.Tno = uuid
+		result.Amount = amount
+	} else {
+		result.Status = 0
+	}
+	return result
 }
-
-//senderAcc := userRepo.GetUserAccountByLogId(sender)
-//receiverAcc := userRepo.GetUserAccountByLogId(receiver)
-//db.Debug().Raw("INSERT INTO rt_transaction values(1,'XYZ','T',CURRENT_TIMESTAMP(),?,CURRENT_TIMESTAMP(),'Admin',CURRENT_TIMESTAMP(),'Admin');", amount)
-//db.Debug().Raw("INSERT INTO rt_transaction_ledger values(1,1,?,'D',?,CURRENT_TIMESTAMP(),'Admin',CURRENT_TIMESTAMP(),'Admin');", senderAcc, -amount)
-//db.Debug().Raw("INSERT INTO rt_transaction_ledger values(2,1,?,'C',?);", receiverAcc, +amount)
-//db.Debug().Raw("UPDATE rm_account set money_account_balance = money_account_balance+? where money_account_id=?;", amount, receiverAcc)
-//db.Debug().Raw("UPDATE rm_account set money_account_balance = money_account_balance-? where money_account_id=?;", amount, senderAcc)
-//return "success"
