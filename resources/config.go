@@ -12,7 +12,9 @@ var (
 )
 
 func Connect() {
-	d, err := gorm.Open(mysql.Open(DNS), &gorm.Config{})
+	d, err := gorm.Open(mysql.Open(DNS), &gorm.Config{
+		SkipDefaultTransaction: true,
+	})
 	if err != nil {
 		panic(err)
 	}

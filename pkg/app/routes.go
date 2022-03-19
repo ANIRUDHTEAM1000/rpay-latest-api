@@ -1,10 +1,10 @@
 package routes
 
 import (
-	accounts "rpay/pkg/account/routes"
-	usercontroller "rpay/pkg/user/routes"
-
 	"github.com/gin-gonic/gin"
+	accounts "rpay/pkg/account/routes"
+	transaction "rpay/pkg/transaction/routes"
+	usercontroller "rpay/pkg/user/routes"
 )
 
 func DefineMainRoutes(router *gin.Engine) {
@@ -13,6 +13,7 @@ func DefineMainRoutes(router *gin.Engine) {
 	{
 		usercontroller.DefineRoutes(engine)
 		accounts.DefineRoutes(engine)
+		transaction.DefineRoutes(engine)
 	}
 	router.GET("/favicon.ico", func(c *gin.Context) {
 

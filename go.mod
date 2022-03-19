@@ -3,15 +3,15 @@ module rpay
 go 1.17
 
 require (
+	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
-	github.com/ulule/deepcopier v0.0.0-20200430083143-45decc6639b6
-	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106
+	github.com/google/uuid v1.3.0
+	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e
 	gorm.io/driver/mysql v1.3.2
-	gorm.io/gorm v1.23.2
+	gorm.io/gorm v1.23.3
 )
 
 require (
-	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect

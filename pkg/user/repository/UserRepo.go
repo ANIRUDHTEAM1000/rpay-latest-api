@@ -5,7 +5,6 @@ import (
 	"gorm.io/gorm"
 	dao "rpay/pkg/user/dao"
 	config "rpay/resources"
-	"strconv"
 )
 
 var db *gorm.DB
@@ -16,6 +15,7 @@ func init() {
 }
 
 func GetUserById(user_id string) dao.Login_Out {
+
 	var result dao.Login_Out
 	obj1 := db.Raw("SELECT USER_INFO_ID,USER_LOGIN_ID, CONCAT(first_name,' ',last_name) AS 'NAME' FROM rm_user_info WHERE USER_LOGIN_ID = ?;", user_id).Scan(&result)
 	if obj1.Error != nil || result.NAME == "" {
@@ -31,23 +31,6 @@ func GetUserById(user_id string) dao.Login_Out {
 	}
 	result.Status = 1
 	return result
-}
-
-func isNumeric(s string) bool {
-	_, err := strconv.ParseFloat(s, 64)
-	return err == nil
-}
-
-func getUserAccount(i int) string {
-	var res string
-	db.Raw("select MONEY_ACCOUNT_ID from rm_account WHERE ACCOUNT_ID = (select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = ?);", i).Scan(&res)
-	return res
-}
-
-func getUserAccountByLogId(user_id string) string {
-	var res string
-	db.Raw("select MONEY_ACCOUNT_ID from rm_account WHERE ACCOUNT_ID = (select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = (SELECT user_info_id FROM rm_user_info WHERE USER_LOGIN_ID=?));", user_id).Scan(&res)
-	return res
 }
 
 func GetUserByEmail(query string) dao.UserQuery {
@@ -111,4 +94,23 @@ func GetUserByName(query string) dao.UserQuery {
 		result.Status = 1
 	}
 	return result
+}
+
+// used general way
+func getUserAccount(user_info_id int) string {
+	var res string
+	db.Raw("select MONEY_ACCOUNT_ID from rm_account WHERE ACCOUNT_ID = (select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = ?);", user_info_id).Scan(&res)
+	return res
+}
+
+func GetUserAccountByLogId(user_id string) string {
+	var res string
+	db.Raw("select MONEY_ACCOUNT_ID from rm_account WHERE ACCOUNT_ID = (select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = (SELECT user_info_id FROM rm_user_info WHERE USER_LOGIN_ID=?));", user_id).Scan(&res)
+	return res
+}
+
+func GetUserAccountPk(user_id string) int {
+	var res int
+	db.Raw("select ACCOUNT_ID from rm_account WHERE ACCOUNT_ID = (select ACCOUNT_ID from rm_user_account WHERE USER_INFO_ID = (SELECT user_info_id FROM rm_user_info WHERE USER_LOGIN_ID=?));", user_id).Scan(&res)
+	return res
 }
