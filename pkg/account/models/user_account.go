@@ -1,6 +1,6 @@
 package models
 
-import user "temp/pkg/user/models"
+import user "rpay/pkg/user/models"
 
 type RM_USER_ACCOUNT struct {
 	USER_ACCOUNT_ID int `gorm:"primaryKey;type:int;not null;autoIncrement"`
