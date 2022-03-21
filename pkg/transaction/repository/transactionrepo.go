@@ -17,7 +17,11 @@ func init() {
 
 func GenUUID() string {
 	id := uuid.New()
-	return id.String()
+	currenttime := time.Now()
+	uuid := id.String()
+	ddmmyyyy := currenttime.Format("02012006") //DDMMYYYY format 
+ 	hhmmss := currenttime.Format("150405")  //HHMMSS format 
+	return uuid+"_"+ddmmyyyy+"_"+hhmmss
 }
 
 func StartTransaction(sender int64, receiver int64, amount int64) dao.Transaction_output {
