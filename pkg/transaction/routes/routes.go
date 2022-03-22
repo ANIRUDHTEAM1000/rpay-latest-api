@@ -7,7 +7,7 @@ import (
 )
 
 func DefineRoutes(transaction *gin.RouterGroup) {
-	transaction.GET("/transfer", func(c *gin.Context) {
+	transaction.POST("/transfer", func(c *gin.Context) {
 		a := dao.Transaction_input{}
 		c.BindJSON(&a)
 		transaction_result := tservice.StartTransaction(a.Sender, a.Receiver, a.Amount)
