@@ -2,11 +2,12 @@ package repository
 
 import (
 	"fmt"
-	"time"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 	dao "rpay/pkg/transaction/dao"
 	config "rpay/resources"
+	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 var db *gorm.DB
@@ -20,9 +21,9 @@ func GenUUID() string {
 	id := uuid.New()
 	currenttime := time.Now()
 	uuid := id.String()
-	ddmmyyyy := currenttime.Format("02012006") //DDMMYYYY format 
- 	hhmmss := currenttime.Format("150405")  //HHMMSS format 
-	return uuid+"_"+ddmmyyyy+"_"+hhmmss
+	ddmmyyyy := currenttime.Format("02012006") //DDMMYYYY format
+	hhmmss := currenttime.Format("150405")     //HHMMSS format
+	return uuid + "_" + ddmmyyyy + "_" + hhmmss
 }
 
 func StartTransaction(sender int64, receiver int64, amount int64) dao.Transaction_output {
@@ -52,11 +53,11 @@ func StartTransaction(sender int64, receiver int64, amount int64) dao.Transactio
 			fmt.Println(err)
 			return err
 		}
-		if err := tx.Debug().Exec("UPDATE rm_account set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE-? where ACCOUNT_ID=? ;", amount, sender).Error; err != nil {
+		if err := tx.Debug().Exec("UPDATE RM_ACCOUNT set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE-? where ACCOUNT_ID=? ;", amount, sender).Error; err != nil {
 			fmt.Println(err)
 			return err
 		}
-		if err := tx.Debug().Exec("UPDATE rm_account set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE+? where ACCOUNT_ID=? ;", amount, receiver).Error; err != nil {
+		if err := tx.Debug().Exec("UPDATE RM_ACCOUNT set MONEY_ACCOUNT_BALANCE = MONEY_ACCOUNT_BALANCE+? where ACCOUNT_ID=? ;", amount, receiver).Error; err != nil {
 			fmt.Println(err)
 			return err
 		}
