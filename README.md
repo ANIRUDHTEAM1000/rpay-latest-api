@@ -1,4 +1,4 @@
-# rpay-latest-api
+# RPay Api
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -52,50 +52,65 @@ Below we describe the conventions or tools specific to golang project.
 ### Layout
 
 ```tree
-├── .github
-│   ├── ISSUE_TEMPLATE.md
-│   └── PULL_REQUEST_TEMPLATE.md
-├── .gitignore
-├── .golangci.yml
-├── CHANGELOG.md
-├── Makefile
-├── OWNERS
+.
 ├── README.md
-├── build
-│   ├── admin
-│   │   └── Dockerfile
-│   └── controller
-│       └── Dockerfile
+├── app.Dockerfile
 ├── cmd
-│   ├── admin
-│   │   └── admin.go
-│   └── controller
-│       └── controller.go
-├── docs
-│   └── README.md
-├── hack
-│   ├── README.md
-│   ├── deployment.yaml
-│   └── script.sh
+│   └── main.go
+├── db.Dockerfile
+├── docker-compose.yml
+├── entrypoint.sh
+├── go.mod
+├── go.sum
 ├── pkg
-│   ├── apis
-│   │   └── v1
-│   │       └── README.md
-│   ├── utils
-│   │   └── net
-│   │       └── net.go
-│   └── version
-│       └── version.go
-├── release
-│   ├── template-admin.yaml
-│   └── template-controller.yaml
-├── test
-│   ├── README.md
-│   └── test_make.sh
-├── third_party
-│   └── README.md
-└── vendor
-    └── README.md
+│   ├── account
+│   │   ├── models
+│   │   │   ├── account.go
+│   │   │   ├── account_type.go
+│   │   │   └── user_account.go
+│   │   ├── repository
+│   │   │   └── account_repo.go
+│   │   ├── routes
+│   │   │   └── routes.go
+│   │   └── services
+│   │       └── services.go
+│   ├── app
+│   │   └── routes.go
+│   ├── transaction
+│   │   ├── dao
+│   │   │   └── transaction_input.go
+│   │   ├── repository
+│   │   │   └── transactionrepo.go
+│   │   ├── routes
+│   │   │   └── routes.go
+│   │   └── services
+│   │       └── services.go
+│   └── user
+│       ├── dao
+│       │   └── login_output.go
+│       ├── models
+│       │   └── user.go
+│       ├── repository
+│       │   └── UserRepo.go
+│       ├── routes
+│       │   └── routes.go
+│       └── services
+│           └── services.go
+└── resources
+    ├── config.go
+    └── database
+        ├── create_tables.sql
+        ├── tables
+        │   ├── a.sql
+        │   ├── b.sql
+        │   ├── c.sql
+        │   ├── d.sql
+        │   ├── e.sql
+        │   ├── f.sql
+        │   └── g.sql
+        ├── tempdata.sql
+        └── transaction.sql
+
 ```
 
 A brief description of the layout:
