@@ -124,6 +124,65 @@ To run the API we have two ways.
     }
     
 
-
 ## Understanding the file structure
-
+```tree
+.
+├── README.md
+├── app.Dockerfile
+├── cmd
+│   └── main
+│       └── main.go
+├── db.Dockerfile
+├── docker-compose.yml
+├── entrypoint.sh
+├── go.mod
+├── go.sum
+├── pkg
+│   ├── account
+│   │   ├── models
+│   │   │   ├── account.go
+│   │   │   ├── account_type.go
+│   │   │   └── user_account.go
+│   │   ├── repository
+│   │   │   └── account_repo.go
+│   │   ├── routes
+│   │   │   └── routes.go
+│   │   └── services
+│   │       └── services.go
+│   ├── app
+│   │   └── routes.go
+│   ├── transaction
+│   │   ├── dao
+│   │   │   └── transaction_input.go
+│   │   ├── repository
+│   │   │   └── transactionrepo.go
+│   │   ├── routes
+│   │   │   └── routes.go
+│   │   └── services
+│   │       └── services.go
+│   └── user
+│       ├── dao
+│       │   └── login_output.go
+│       ├── models
+│       │   └── user.go
+│       ├── repository
+│       │   └── UserRepo.go
+│       ├── routes
+│       │   └── routes.go
+│       └── services
+│           └── services.go
+└── resources
+    ├── config.go
+    └── database
+        ├── create_tables.sql
+        ├── tables
+        │   ├── a.sql
+        │   ├── b.sql
+        │   ├── c.sql
+        │   ├── d.sql
+        │   ├── e.sql
+        │   ├── f.sql
+        │   └── g.sql
+        ├── tempdata.sql
+        └── transaction.sql
+```
