@@ -45,10 +45,10 @@ To run the API we have two ways.
 2. open the resources/config.go and change the database name, user name and password with your database name and password.
 3. open the terminal and enter into mariadb by using your name and password to do so run
     * ``` mariadb -u <user-name> -p<Password> ```
-    * ``` use <database name> ```
+    * ``` use <databas- name> ```
     *  now copy the path till the database folder eg:  C:\Users\user1\OneDrive\Desktop\rpay-latest-api\resources\database
-    * ``` source <paste the copied path>\create_tables.sql ``` 
-    * ``` source <paste the copied path>\tempdata.sql ```
+    * ``` source <paste_the_copied_path>\create_tables.sql ``` 
+    * ``` source <paste_the_copied_path>\tempdata.sql ```
 4. after step 3 our database is ready with all required tables and some temporary data.
 5. open the integrated terminal in vsCode and navigate as cmd/main where our main.go is located.
 6. now run the command
