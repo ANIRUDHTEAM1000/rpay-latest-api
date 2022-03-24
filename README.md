@@ -65,8 +65,63 @@ To run the API we have two ways.
 8. test the [api calls](#api-calls) on postman
 9. Use the database client to see the data in tables.
 
-## API calls
+## Get the user data using his USER_LOGIN_ID
 
+`walletengine/user/<USER_LOGIN_ID>` (method : GET)
+
+### Response
+    {
+    "status": 1,
+    "name": "Anirudh G",
+    "user_login_id": "18891A05D6",
+    "balance": 7000
+    }
+
+## Get list of users searched using 
+
+`walletengine/user/query<name-phone-email>` (method : GET)
+
+### Response
+    {
+        "status": 1,
+        "users": 
+        [
+            {
+            "name": "Anirudh G",
+            "user_login_id": "18891A05D6"
+            },
+            {
+            "name": "Rakshith A",
+            "user_login_id": "18891A05D5"
+            },
+            {
+                "name": "Nishanth B",
+                "user_login_id": "18891A05D0"
+            }
+        ]
+    }
+
+## Get the user data using his USER_LOGIN_ID
+
+`walletengine/transfer` (method : POST)
+
+### json input as follows
+    {
+    "sender":"18891A05D6",
+    "receiver":"18891A05D0",
+    "amount":1000
+    }
+
+### Response
+    {
+    "status": 1,
+    "transaction_number": "b7bca2b1-79ca-4204-b144-a6b5a37f2aae_24032022_052205",
+    "time": "2022-03-24 05:22:05",
+    "amount": 1000,
+    "sender": "18891A05D6",
+    "receiver": "18891A05D0"
+    }
 
 
 ## Understanding the file structure
+
