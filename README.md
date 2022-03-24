@@ -21,7 +21,15 @@
 
 
 ## Installation
+### Golang Installation  
+1) Download the Go Installer from https://go.dev/doc/install
+2) Select the tab from the Go Install section on the page according to the operating system to setup the enviornment variable
+3) You are ready to code.
 
+### Mariadb Installation 
+- For MacOS https://mariadb.com/resources/blog/installing-mariadb-10-1-16-on-mac-os-x-with-homebrew/
+- For Windows https://www.mariadbtutorial.com/getting-started/install-mariadb/
+- For Linux https://linuxize.com/post/how-to-install-mariadb-on-ubuntu-18-04/
 
 
 ## How to run the API
