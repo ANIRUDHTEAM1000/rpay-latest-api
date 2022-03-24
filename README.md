@@ -52,7 +52,8 @@ To run the API we have two ways.
 1. open the cloned/downloaded api folder in your IDE editor.
 2. open the resources/config.go and change the database name, user name and password with your database name and password.
 3. open the terminal and enter into mariadb by using your name and password to do so run
-    * ``` mariadb -u <user-name> -p<Password> ```
+    * ###
+        ``` mariadb -u <user-name> -p<Password> ```
     * ``` use <databas- name> ```
     *  now copy the path till the database folder eg:  C:\Users\user1\OneDrive\Desktop\rpay-latest-api\resources\database
     * ``` source <paste_the_copied_path>\create_tables.sql ``` 
