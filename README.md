@@ -122,6 +122,7 @@ To run the API we have two ways.
     "sender": "18891A05D6",
     "receiver": "18891A05D0"
     }
+    
 
 
 ## Understanding the file structure
