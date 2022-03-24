@@ -52,7 +52,8 @@ To run the API we have two ways.
 1. open the cloned/downloaded api folder in your IDE editor.
 2. open the resources/config.go and change the database name, user name and password with your database name and password.
 3. open the terminal and enter into mariadb by using your name and password to do so run
-    * ``` mariadb -u <user-name> -p<Password> ```
+    * ###
+        ``` mariadb -u <user-name> -p<Password> ```
     * ``` use <databas- name> ```
     *  now copy the path till the database folder eg:  C:\Users\user1\OneDrive\Desktop\rpay-latest-api\resources\database
     * ``` source <paste_the_copied_path>\create_tables.sql ``` 
@@ -65,69 +66,64 @@ To run the API we have two ways.
 8. test the [api calls](#api-calls) on postman
 9. Use the database client to see the data in tables.
 
-## API calls
+## Get the user data using his USER_LOGIN_ID
 
+`walletengine/user/<USER_LOGIN_ID>` (method : GET)
+
+### Response
+    {
+    "status": 1,
+    "name": "Anirudh G",
+    "user_login_id": "18891A05D6",
+    "balance": 7000
+    }
+
+## Get list of users searched using 
+
+`walletengine/user/query<name-phone-email>` (method : GET)
+
+### Response
+    {
+        "status": 1,
+        "users": 
+        [
+            {
+            "name": "Anirudh G",
+            "user_login_id": "18891A05D6"
+            },
+            {
+            "name": "Rakshith A",
+            "user_login_id": "18891A05D5"
+            },
+            {
+                "name": "Nishanth B",
+                "user_login_id": "18891A05D0"
+            }
+        ]
+    }
+
+## Get the user data using his USER_LOGIN_ID
+
+`walletengine/transfer` (method : POST)
+
+### json input as follows
+    {
+    "sender":"18891A05D6",
+    "receiver":"18891A05D0",
+    "amount":1000
+    }
+
+### Response
+    {
+    "status": 1,
+    "transaction_number": "b7bca2b1-79ca-4204-b144-a6b5a37f2aae_24032022_052205",
+    "time": "2022-03-24 05:22:05",
+    "amount": 1000,
+    "sender": "18891A05D6",
+    "receiver": "18891A05D0"
+    }
+    
 
 
 ## Understanding the file structure
 
-```tree
-.
-├── README.md
-├── app.Dockerfile
-├── cmd
-│   └── main.go
-├── db.Dockerfile
-├── docker-compose.yml
-├── entrypoint.sh
-├── go.mod
-├── go.sum
-├── pkg
-│   ├── account
-│   │   ├── models
-│   │   │   ├── account.go
-│   │   │   ├── account_type.go
-│   │   │   └── user_account.go
-│   │   ├── repository
-│   │   │   └── account_repo.go
-│   │   ├── routes
-│   │   │   └── routes.go
-│   │   └── services
-│   │       └── services.go
-│   ├── app
-│   │   └── routes.go
-│   ├── transaction
-│   │   ├── dao
-│   │   │   └── transaction_input.go
-│   │   ├── repository
-│   │   │   └── transactionrepo.go
-│   │   ├── routes
-│   │   │   └── routes.go
-│   │   └── services
-│   │       └── services.go
-│   └── user
-│       ├── dao
-│       │   └── login_output.go
-│       ├── models
-│       │   └── user.go
-│       ├── repository
-│       │   └── UserRepo.go
-│       ├── routes
-│       │   └── routes.go
-│       └── services
-│           └── services.go
-└── resources
-    ├── config.go
-    └── database
-        ├── create_tables.sql
-        ├── tables
-        │   ├── a.sql
-        │   ├── b.sql
-        │   ├── c.sql
-        │   ├── d.sql
-        │   ├── e.sql
-        │   ├── f.sql
-        │   └── g.sql
-        ├── tempdata.sql
-        └── transaction.sql
-```
