@@ -9,19 +9,17 @@
 5) Understanding the file structure
 
 ## Project Description
----
+
 
 
 ## Requirements
----
 
 
 ## Installation
----
+
 
 
 ## How to run the API
----
+
 
 ## Understanding the file structure
----
