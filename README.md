@@ -12,15 +12,16 @@
 
 
 ## Requirements
-- golang
-- mariadb
+- Golang
+- Mariadb
 - any IDE (Visual Studio code) and database client
-- Post man
+- Postman
 - Docker
+- DBeaver
 
 
 ## Installation
-
+Install Go <a>https://go.dev/doc/tutorial/getting-started#prerequisites</a>
 
 
 ## How to run the API
