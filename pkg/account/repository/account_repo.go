@@ -20,3 +20,9 @@ func GetBalanceByUid(uid string) float64 {
 	fmt.Println(balance)
 	return balance
 }
+
+func GetNameFromAccountId(accountId int64) string {
+	var name string
+	db.Raw("SELECT CONCAT(FIRST_NAME,' ',LAST_NAME) FROM RM_USER_INFO WHERE USER_INFO_ID = (SELECT USER_INFO_ID FROM RM_USER_ACCOUNT WHERE ACCOUNT_ID = ?);", accountId).Scan(&name)
+	return name
+}

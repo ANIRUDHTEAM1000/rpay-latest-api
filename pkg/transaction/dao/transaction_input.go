@@ -14,3 +14,16 @@ type Transaction_output struct {
 	SenderName   string `json:"sender"`
 	ReceiverName string `json:"receiver"`
 }
+
+type Transaction struct {
+	Name              string  `json:"name"`
+	Amount            float64 `json:"amount"`
+	Date              string  `json:"date"`
+	TransactionNumber string  `json:"transaction_number"`
+}
+
+type TransactionsList struct {
+	Status       int           `json:"status"`
+	Transactions []Transaction `json:"transactions"`
+	TotalPages   int           `json:"total_pages"`
+}
