@@ -92,11 +92,24 @@ func GetAccountIdFromUserId(userId string) int {
 func GetTransactions(accountId int, pageNumber int) []transactio_models.RT_TRANSACTION_LEDGER {
 	var transactions []transactio_models.RT_TRANSACTION_LEDGER
 	var no_of_transactions int
-	offset := (pageNumber) * 10
 	db.Raw("SELECT COUNT(*) FROM RT_TRANSACTION_LEDGER WHERE ACCOUNT_ID = ?", accountId).Scan(&no_of_transactions)
-	obj1 := db.Raw("select l2.* from  RT_TRANSACTION_LEDGER l1 ,RT_TRANSACTION_LEDGER l2 where ( l1.ACCOUNT_ID = ? and (l1.TRANSACTION_ID=l2.TRANSACTION_ID and l2.ACCOUNT_ID <>?) ) LIMIT 10 OFFSET ? ;", accountId, accountId, no_of_transactions-offset).Scan(&transactions)
+	limit := 10
+	offset := pageNumber * limit
+	if pageNumber > ((no_of_transactions / 10) + 1) {
+		return transactions
+	}
+	if offset >= no_of_transactions {
+		offset = 0
+		limit = no_of_transactions - ((pageNumber - 1) * 10)
+	} else {
+		offset = no_of_transactions - offset
+		limit = 10
+	}
+	print(no_of_transactions, offset)
+	obj1 := db.Raw("select l2.* from  RT_TRANSACTION_LEDGER l1 ,RT_TRANSACTION_LEDGER l2 where ( l1.ACCOUNT_ID = ? and (l1.TRANSACTION_ID=l2.TRANSACTION_ID and l2.ACCOUNT_ID <>?) ) LIMIT ? OFFSET ? ;", accountId, accountId, limit, offset).Scan(&transactions)
 	if obj1.Error != nil {
 		fmt.Println(obj1.Error)
+
 	}
 	return transactions
 }
