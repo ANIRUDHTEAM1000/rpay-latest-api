@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert
+    kompose.service.type: LoadBalancer
     kompose.version: 1.26.1 (HEAD)
   creationTimestamp: null
   labels:
@@ -19,13 +20,17 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert
+        kompose.service.type: LoadBalancer
         kompose.version: 1.26.1 (HEAD)
       creationTimestamp: null
       labels:
         io.kompose.service: api
     spec:
       containers:
-        - image: api
+        - env:
+            - name: GET_HOSTS_FROM
+              value: dns
+          image: api
           name: rpay
           ports:
             - containerPort: 8080

@@ -13,7 +13,8 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: db
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       annotations:
@@ -41,5 +42,12 @@ spec:
           ports:
             - containerPort: 3306
           resources: {}
+          volumeMounts:
+            - mountPath: /app/
+              name: db-claim0
       restartPolicy: Always
+      volumes:
+        - name: db-claim0
+          persistentVolumeClaim:
+            claimName: db-claim0
 status: {}

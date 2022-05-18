@@ -13,19 +13,16 @@ services:
     ports:
       # <Port exposed> : < MySQL Port running inside container>
       - "3307:3306"
+    environment:
+      - GET_HOSTS_FROM=dns
     # setting some env vars to create the DB
     environment:
       MARIADB_ROOT_PASSWORD: "Team@1000"
       MARIADB_DATABASE: "rpay"
       MARIADB_USER: "anirudh"
       MARIADB_PASSWORD: "Team@1000"
-      # OR if you want to use "root" as the user, just these two lines
-      # MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-      # MYSQL_DATABASE: ${DATABASE_NAME}
-
-    # we mount a data volume to make sure we don't lose data
-    # volumes:
-    #   - mysql_data:/var/lib/mysql
+    volumes:
+      - .:/app/
     command: --default-authentication-plugin=mysql_native_password
   api:
     container_name:  "rpay"
@@ -33,6 +30,8 @@ services:
     build:
       context: .
       dockerfile: app.Dockerfile
+    environment:
+      - GET_HOSTS_FROM=dns
     ports:
       - "8080:8080"
     # we are depending on the mysql backend
@@ -42,4 +41,6 @@ services:
     # This is what makes the hot reloading work inside of a Docker container
     volumes:
       - .:/app/
+    labels:
+      kompose.service.type: LoadBalancer
 
