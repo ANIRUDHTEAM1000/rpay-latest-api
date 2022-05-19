@@ -29,6 +29,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
   api:
     container_name:  "rpay"
+    image: rakshitkapoor456/rpay_api:latest
     # we want to use the image which is build from our Dockerfile
     build:
       context: .
