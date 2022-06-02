@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	dao "rpay/pkg/transaction/dao"
+	transactio_models "rpay/pkg/transaction/models"
 	config "rpay/resources"
 	"time"
 
@@ -76,4 +77,53 @@ func StartTransaction(sender int64, receiver int64, amount int64) dao.Transactio
 		result.Status = 0
 	}
 	return result
+}
+
+func GetAccountIdFromUserId(userId string) int {
+	var accountId int
+	obj1 := db.Raw("SELECT ACCOUNT_ID FROM RM_USER_ACCOUNT WHERE USER_INFO_ID = ( SELECT USER_INFO_ID FROM RM_USER_INFO WHERE USER_LOGIN_ID = ? );", userId).Scan(&accountId)
+	if obj1.Error != nil {
+		fmt.Println(obj1.Error)
+	}
+	return accountId
+}
+
+func GetTransactions(accountId int, pageNumber int) []transactio_models.RT_TRANSACTION_LEDGER {
+	var transactions []transactio_models.RT_TRANSACTION_LEDGER
+	var no_of_transactions int
+	db.Raw("SELECT COUNT(*) FROM RT_TRANSACTION_LEDGER WHERE ACCOUNT_ID = ?", accountId).Scan(&no_of_transactions)
+	limit := 10
+	offset := pageNumber * limit
+	if pageNumber > ((no_of_transactions / 10) + 1) {
+		return transactions
+	}
+	if offset >= no_of_transactions {
+		offset = 0
+		limit = no_of_transactions - ((pageNumber - 1) * 10)
+	} else {
+		offset = no_of_transactions - offset
+		limit = 10
+	}
+	print(no_of_transactions, offset)
+	obj1 := db.Raw("select l2.* from  RT_TRANSACTION_LEDGER l1 ,RT_TRANSACTION_LEDGER l2 where ( l1.ACCOUNT_ID = ? and (l1.TRANSACTION_ID=l2.TRANSACTION_ID and l2.ACCOUNT_ID <>?) ) LIMIT ? OFFSET ? ;", accountId, accountId, limit, offset).Scan(&transactions)
+	if obj1.Error != nil {
+		fmt.Println(obj1.Error)
+
+	}
+	return transactions
+}
+
+func GetTotalTransactions(accountId int) int64 {
+	var no_of_transactions int64
+	db.Raw("SELECT COUNT(*) FROM RT_TRANSACTION_LEDGER WHERE ACCOUNT_ID = ?", accountId).Scan(&no_of_transactions)
+	return no_of_transactions
+}
+
+func GetTransactionNumberFromId(tid int64) string {
+	var transaction_number string
+	obj1 := db.Raw("SELECT TRANSACTION_UNIQUE_ID FROM RT_TRANSACTION WHERE TRANSACTION_ID = ? ;", tid).Scan(&transaction_number)
+	if obj1.Error != nil {
+		fmt.Println(obj1.Error)
+	}
+	return transaction_number
 }

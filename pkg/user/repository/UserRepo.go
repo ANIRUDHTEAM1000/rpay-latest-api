@@ -26,10 +26,13 @@ func GetUserById(user_id string) dao.Login_Out {
 	}
 	obj2 := db.Raw("select MONEY_ACCOUNT_BALANCE from RM_ACCOUNT WHERE ACCOUNT_ID = (select ACCOUNT_ID from RM_USER_ACCOUNT WHERE USER_INFO_ID = ? );", result.USER_INFO_ID).Scan(&result.BALANCE)
 	if obj2.Error != nil {
+		fmt.Println("hi")
 		fmt.Println(obj2.Error)
 		result.Status = 0
 		return result
 	}
+	result.CASH_BACK = 87.35
+	result.RAKUTEN_POINTS = 147
 	result.Status = 1
 	return result
 }

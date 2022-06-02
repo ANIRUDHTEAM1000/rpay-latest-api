@@ -42,4 +42,3 @@ services:
     # This is what makes the hot reloading work inside of a Docker container
     volumes:
       - .:/app/
-
