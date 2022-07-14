@@ -36,6 +36,9 @@ func GetTransactionList(userId string, pageNumber int) dao.TransactionsList {
 		transaction.Name = accountRepo.GetNameFromAccountId(transactions[i].ACCOUNT_ID)
 		// fetch transaction_number from transaction_id
 		transaction.TransactionNumber = transactionRepo.GetTransactionNumberFromId(transactions[i].TRANSACTION_ID)
+		if transaction.TransactionNumber == "" {
+			continue
+		}
 		transaction.Amount = transactions[i].LEDGER_TRANSACTION_AMOUNT
 		transaction.Date = transactions[i].CREATED_DATE
 		transactionList.Transactions = append(transactionList.Transactions, transaction)

@@ -1,10 +1,11 @@
 package models
 
-type Card struct {
-	Type         string `json:"type"`
-	CardNumber   string `json:"card_number"`
-	ExpireOn     string `json:"expire_on"`
-	SecurityCode string `json:"security_code"`
-	CardHolder   string `json:"card_holder"`
-	Enabled      bool   `json:"enabled"`
+type Account struct {
+	MONEY_ACCOUNT_BALANCE float64 `json:"balance"`
+	MONEY_ACCOUNT_ID      string  `json:"card_number"`
+	SECURITY_CODE         string  `json:"security_code"`
+	IS_ACTIVE             bool    `json:"enabled"`
+	ExpireOn              string  `json:"expire_on"`
+	Type                  string  `json:"type"`
+	CardHolder            string  `json:"card_holder"`
 }

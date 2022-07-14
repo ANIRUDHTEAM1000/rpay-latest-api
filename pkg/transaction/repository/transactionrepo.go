@@ -43,7 +43,7 @@ func StartTransaction(sender int64, receiver int64, amount int64) dao.Transactio
 			fmt.Println(err)
 			return err
 		}
-		fmt.Println(tid)
+		fmt.Println(tid, sender, receiver)
 		if err := tx.Debug().Exec("INSERT INTO RT_TRANSACTION_LEDGER(TRANSACTION_ID,ACCOUNT_ID,LEDGER_TYPE_CODE,LEDGER_TRANSACTION_AMOUNT,CREATED_BY"+
 			",UPDATED_BY) values (?,?,'D',?,'Admin','Admin');", tid, sender, -amount).Error; err != nil {
 			fmt.Println(err)
@@ -81,7 +81,7 @@ func StartTransaction(sender int64, receiver int64, amount int64) dao.Transactio
 
 func GetAccountIdFromUserId(userId string) int {
 	var accountId int
-	obj1 := db.Raw("SELECT ACCOUNT_ID FROM RM_USER_ACCOUNT WHERE USER_INFO_ID = ( SELECT USER_INFO_ID FROM RM_USER_INFO WHERE USER_LOGIN_ID = ? );", userId).Scan(&accountId)
+	obj1 := db.Raw(" select ACCOUNT_ID from RM_ACCOUNT where ACCOUNT_ID in (select ACCOUNT_ID from RM_USER_ACCOUNT where USER_INFO_ID = (select USER_INFO_ID from RM_USER_INFO where USER_LOGIN_ID= ? ) ) and ACCOUNT_TYPE_ID=0;", userId).Scan(&accountId)
 	if obj1.Error != nil {
 		fmt.Println(obj1.Error)
 	}
@@ -91,9 +91,12 @@ func GetAccountIdFromUserId(userId string) int {
 func GetTransactions(accountId int, pageNumber int) []transactio_models.RT_TRANSACTION_LEDGER {
 	var transactions []transactio_models.RT_TRANSACTION_LEDGER
 	var no_of_transactions int
-	db.Raw("SELECT COUNT(*) FROM RT_TRANSACTION_LEDGER WHERE ACCOUNT_ID = ?", accountId).Scan(&no_of_transactions)
+	db.Raw("select count(*) from RT_TRANSACTION_LEDGER l1 ,RT_TRANSACTION_LEDGER l2 where ( l1.ACCOUNT_ID = ? and (l1.TRANSACTION_ID=l2.TRANSACTION_ID and l2.ACCOUNT_ID <> ? and (select ACCOUNT_TYPE_ID from RM_ACCOUNT where ACCOUNT_ID=l2.ACCOUNT_ID) not in (1,2) ) ); ", accountId, accountId).Scan(&no_of_transactions)
+	fmt.Print(no_of_transactions)
+	//no_of_transactions = 2
 	limit := 10
 	offset := pageNumber * limit
+	// 10
 	if pageNumber > ((no_of_transactions / 10) + 1) {
 		return transactions
 	}
@@ -104,8 +107,8 @@ func GetTransactions(accountId int, pageNumber int) []transactio_models.RT_TRANS
 		offset = no_of_transactions - offset
 		limit = 10
 	}
-	print(no_of_transactions, offset)
-	obj1 := db.Raw("select l2.* from  RT_TRANSACTION_LEDGER l1 ,RT_TRANSACTION_LEDGER l2 where ( l1.ACCOUNT_ID = ? and (l1.TRANSACTION_ID=l2.TRANSACTION_ID and l2.ACCOUNT_ID <>?) ) LIMIT ? OFFSET ? ;", accountId, accountId, limit, offset).Scan(&transactions)
+
+	obj1 := db.Raw("select l2.* from  RT_TRANSACTION_LEDGER l1 ,RT_TRANSACTION_LEDGER l2 where ( l1.ACCOUNT_ID = ? and (l1.TRANSACTION_ID=l2.TRANSACTION_ID and l2.ACCOUNT_ID <> ? and (select ACCOUNT_TYPE_ID from RM_ACCOUNT where ACCOUNT_ID=l2.ACCOUNT_ID) not in (1,2) ) ) LIMIT ? OFFSET ?", accountId, accountId, limit, offset).Scan(&transactions)
 	if obj1.Error != nil {
 		fmt.Println(obj1.Error)
 
@@ -121,7 +124,7 @@ func GetTotalTransactions(accountId int) int64 {
 
 func GetTransactionNumberFromId(tid int64) string {
 	var transaction_number string
-	obj1 := db.Raw("SELECT TRANSACTION_UNIQUE_ID FROM RT_TRANSACTION WHERE TRANSACTION_ID = ? ;", tid).Scan(&transaction_number)
+	obj1 := db.Raw("SELECT TRANSACTION_UNIQUE_ID FROM RT_TRANSACTION WHERE TRANSACTION_ID = ? and TRANSACTION_TYPE_CODE='b' ;", tid).Scan(&transaction_number)
 	if obj1.Error != nil {
 		fmt.Println(obj1.Error)
 	}

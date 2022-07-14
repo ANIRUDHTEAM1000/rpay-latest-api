@@ -16,7 +16,7 @@ func init() {
 
 func GetBalanceByUid(uid string) float64 {
 	var balance float64
-	db.Raw("select MONEY_ACCOUNT_BALANCE from RM_ACCOUNT WHERE ACCOUNT_ID = (select ACCOUNT_ID from RM_USER_ACCOUNT WHERE USER_INFO_ID = (SELECT USER_INFO_ID FROM RM_USER_INFO WHERE USER_LOGIN_ID=?));", uid).Scan(&balance)
+	db.Raw("SELECT MONEY_ACCOUNT_BALANCE from RM_ACCOUNT WHERE ACCOUNT_ID in (select ACCOUNT_ID from RM_USER_ACCOUNT WHERE USER_INFO_ID = (SELECT USER_INFO_ID FROM RM_USER_INFO WHERE USER_LOGIN_ID=?)) and ACCOUNT_TYPE_ID=0; ", uid).Scan(&balance)
 	fmt.Println(balance)
 	return balance
 }

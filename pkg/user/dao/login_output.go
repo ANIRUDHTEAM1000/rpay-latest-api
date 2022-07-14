@@ -9,7 +9,7 @@ type Login_Out struct {
 	USER_LOGIN_ID  string  `json:"user_login_id" binding:"required"`
 	BALANCE        float32 `json:"balance" binding:"required"`
 	CASH_BACK      float32 `json:"cash_back" `
-	RAKUTEN_POINTS int32   `json:"rakuten_points" `
+	RAKUTEN_POINTS float32 `json:"rakuten_points" `
 }
 
 type User struct {
